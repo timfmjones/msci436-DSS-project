@@ -233,3 +233,44 @@ summary(full_model)
 fit1 <- lm(track_popularity ~ danceability, data=train)
 summary(fit1)
 ```
+
+
+```{r}
+anova(full_model)
+```
+
+### Model diagnostics
+
+```{r}
+ggplot(data = full_model, aes(x = .fitted, y = .resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  xlab("Fitted values") +
+  ylab("Residuals")
+```
+
+```{r}
+ggplot(data = full_model, aes(x = .resid)) +
+  geom_histogram(binwidth = 1, fill='white', color='black') +
+  xlab("Residuals")
+```
+
+```{r}
+ggplot(data = full_model, aes(sample = .resid)) +
+  stat_qq()
+```
+
+## Part 5: Prediction
+
+```{r}
+newsong <- test %>% select(duration_ms, key, playlist_genre, danceability, valence, energy)
+predict(full_model, newsong)
+```
+
+```{r}
+predict(full_model, newsong, interval = "prediction", level = 0.95)
+```
+
+```{r}
+test$track_popularity
+```
