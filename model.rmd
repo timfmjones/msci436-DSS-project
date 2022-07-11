@@ -108,8 +108,8 @@ dim(test)
 #hist(train$audience_score)
 #summary(train$audience_score)
 
-hist(train$track_popularity)
-summary(train$track_popularity)
+hist(train$popularity)
+summary(train$popularity)
 ```
 
 
@@ -159,13 +159,11 @@ grid.arrange(p1, p2, p3, p4, ncol=2)
 
 p1 <- ggplot(aes(x=key), data=train) + geom_bar(aes(y=100*(..count..)/sum(..count..))) + ylab('percentage') +
   ggtitle('Key') + coord_flip()
-p2 <- ggplot(aes(x=playlist_genre), data=train) + geom_bar(aes(y=100*(..count..)/sum(..count..))) + ylab('percentage') +
-  ggtitle('playlist_genre') + coord_flip()
-p3 <- ggplot(aes(x=playlist_subgenre), data=train) + geom_bar(aes(y=100*(..count..)/sum(..count..))) + ylab('percentage') +
-  ggtitle('playlist_subgenre') + coord_flip()
-p4 <- ggplot(aes(x=track_artist), data=train) + geom_bar(aes(y=100*(..count..)/sum(..count..))) + ylab('percentage') +
+p2 <- ggplot(aes(x=genre), data=train) + geom_bar(aes(y=100*(..count..)/sum(..count..))) + ylab('percentage') +
+  ggtitle('genre') + coord_flip()
+p4 <- ggplot(aes(x=artist), data=train) + geom_bar(aes(y=100*(..count..)/sum(..count..))) + ylab('percentage') +
   ggtitle('track artist') + coord_flip()
-grid.arrange(p1, p2, p3, p4, ncol=2)
+grid.arrange(p1, p2, p4, ncol=2)
 ```
 
 
@@ -201,12 +199,11 @@ by(train$audience_score, train$genre, summary)
 ```{r}
 
 
-boxplot(track_popularity~key, data=train, main='track_popularity vs. key', xlab='key', ylab='track_popularity')
-by(train$track_popularity, train$key, summary)
-boxplot(track_popularity~playlist_genre, data=train, main='track_popularity vs. genre', xlab='genre', ylab='track_popularity')
-by(train$track_popularity, train$playlist_genre, summary)
-boxplot(track_popularity~playlist_subgenre, data=train, main='track_popularity vs. subgenre', xlab='subgenre', ylab='track_popularity')
-by(train$track_popularity, train$playlist_subgenre, summary)
+boxplot(popularity~key, data=train, main='popularity vs. key', xlab='key', ylab='popularity')
+by(train$popularity, train$key, summary)
+boxplot(popularity~genre, data=train, main='popularity vs. genre', xlab='genre', ylab='popularity')
+by(train$popularity, train$genre, summary)
+
 
 ```
 
@@ -224,13 +221,13 @@ summary(full_model)
 ```{r}
 
 #check order of predictors 
-full_model <- lm(track_popularity~duration_ms+key+playlist_genre+danceability+valence+energy+playlist_subgenre, data=train)
+full_model <- lm(popularity~duration_ms+key+genre+danceability+valence+energy, data=train)
 summary(full_model)
 ```
 
 
 ```{r}
-fit1 <- lm(track_popularity ~ danceability, data=train)
+fit1 <- lm(popularity ~ danceability, data=train)
 summary(fit1)
 ```
 
@@ -263,7 +260,7 @@ ggplot(data = full_model, aes(sample = .resid)) +
 ## Part 5: Prediction
 
 ```{r}
-newsong <- test %>% select(duration_ms, key, playlist_genre, danceability, valence, energy)
+newsong <- test %>% select(duration_ms, key, genre, danceability, valence, energy)
 predict(full_model, newsong)
 ```
 
@@ -272,5 +269,5 @@ predict(full_model, newsong, interval = "prediction", level = 0.95)
 ```
 
 ```{r}
-test$track_popularity
+test$popularity
 ```
