@@ -52,9 +52,9 @@ is song popularity related to energy, key, etc?
 
 Abstracting the data of the above potential predictors for the model.
 
-```{r}
-movies_new <- movies %>% select(title, title_type, genre, runtime, imdb_rating, imdb_num_votes, critics_rating, critics_score, audience_rating, audience_score, best_pic_win, best_actor_win, best_actress_win, best_dir_win)
 
+movies_new <- movies %>% select(title, title_type, genre, runtime, imdb_rating, imdb_num_votes, critics_rating, critics_score, audience_rating, audience_score, best_pic_win, best_actor_win, best_actress_win, best_dir_win)
+```{r}
 
 ```
 
