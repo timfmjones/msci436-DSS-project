@@ -1,26 +1,18 @@
 ---
-title: "436proj"
+title: "436model"
 output: html_document
 ---
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-
----
-title: "Modeling and prediction for movies"
-output: 
-  html_document: 
-    fig_height: 4
-    highlight: pygments
-    theme: spacelab
----
-
 ## Setup
 
-This project details our analysis of the movie dataset that contains information from [Rotten Tomatos](https://www.rottentomatoes.com/) and [IMDB](http://www.imdb.com/) for a random sample of movies. The purpose of this project is to develop a multiple linear regression model to understand what attributes make a movie popular. In the meantime, learning something new about movies. 
+data from
+model based on
 
 ### Load packages
 
@@ -35,8 +27,6 @@ library(corrplot)
 ### Load data
 
 ```{r load-data}
-#load("movies.Rdata")
-
 ss <- readr::read_csv('spotify_songs.csv')
 ```
 
@@ -52,8 +42,8 @@ is song popularity related to energy, key, etc?
 
 Abstracting the data of the above potential predictors for the model.
 
-
 movies_new <- movies %>% select(title, title_type, genre, runtime, imdb_rating, imdb_num_votes, critics_rating, critics_score, audience_rating, audience_score, best_pic_win, best_actor_win, best_actress_win, best_dir_win)
+
 ```{r}
 
 ```
@@ -61,36 +51,27 @@ movies_new <- movies %>% select(title, title_type, genre, runtime, imdb_rating, 
 Look at the structure of the data
 
 ```{r}
-#str(movies_new)
-
 str(ss)
 ```
 
 Summary statistics
 
 ```{r}
-#summary(movies_new)
 
 summary(ss)
 ```
 
-I find there is one missing value, and decide to drop it. 
+drop missing values
 
 ```{r}
-#movies_new <- na.omit(movies_new)
-
 ss <- na.omit(ss)
 ```
 
-Part of this project is to use the model to predict a movie's audience score and this movie should not be part of the data. Therefore, I split the data into traning and testing, and there is only one row in the test set.
+
+
+Split data into training and testing
 
 ```{r}
-#set.seed(2017)
-#split <- sample(seq_len(nrow(movies_new)), size = floor(0.999 * nrow(movies_new)))
-#train <- movies_new[split, ]
-#test <- movies_new[-split, ]
-#dim(train)
-
 set.seed(2017)
 split <- sample(seq_len(nrow(ss)), size = floor(0.999 * nrow(ss)))
 train <- ss[split, ]
@@ -105,9 +86,6 @@ dim(test)
 ### Histogram of Numeric variables
 
 ```{r}
-#hist(train$audience_score)
-#summary(train$audience_score)
-
 hist(train$popularity)
 summary(train$popularity)
 ```
@@ -115,48 +93,34 @@ summary(train$popularity)
 
 
 
-
-p1 <- ggplot(aes(x=runtime), data=train) + 
-  geom_histogram(aes(y=100*(..count..)/sum(..count..)), color='black', fill='white', binwidth = 5) + ylab('percentage') + ggtitle('Run Time')
-p2 <- ggplot(aes(x=imdb_rating), data=train) +
-  geom_histogram(aes(y=100*(..count..)/sum(..count..)), color='black', fill='white', binwidth = 0.2) + ylab('percentage') + ggtitle('IMDB rating')
-p3 <- ggplot(aes(x=log10(imdb_num_votes)), data=train) +
-  geom_histogram(aes(y=100*(..count..)/sum(..count..)), color='black', fill='white') + ylab('percentage') + ggtitle('log(IMDB number of votes)')
-p4 <- ggplot(aes(x=critics_score), data=train) +
-  geom_histogram(aes(y=100*(..count..)/sum(..count..)), color='black', fill='white', binwidth = 2) + ylab('percentage') + ggtitle('Critics Score')
-grid.arrange(p1, p2, p3, p4, ncol=2)
-
 ```{r message=FALSE, warning=FALSE}
-
-
 p1 <- ggplot(aes(x=duration_ms), data=train) + 
-  geom_histogram(aes(y=100*(..count..)/sum(..count..)), color='black', fill='white', binwidth = 5) + ylab('percentage') + ggtitle('duration_ms')
+  geom_histogram(aes(y=100*(..count..)/sum(..count..)), color='black', fill='white') + ylab('percentage') + ggtitle('duration_ms')
 p2 <- ggplot(aes(x=danceability), data=train) +
-  geom_histogram(aes(y=100*(..count..)/sum(..count..)), color='black', fill='white', binwidth = 0.2) + ylab('percentage') + ggtitle('danceability')
+  geom_histogram(aes(y=100*(..count..)/sum(..count..)), color='black', fill='white') + ylab('percentage') + ggtitle('danceability')
 p3 <- ggplot(aes(x=valence), data=train) +
   geom_histogram(aes(y=100*(..count..)/sum(..count..)), color='black', fill='white') + ylab('percentage') + ggtitle('valence')
 p4 <- ggplot(aes(x=tempo), data=train) +
-  geom_histogram(aes(y=100*(..count..)/sum(..count..)), color='black', fill='white', binwidth = 2) + ylab('percentage') + ggtitle('tempo')
-grid.arrange(p1, p2, p3, p4, ncol=2)
-
-
+  geom_histogram(aes(y=100*(..count..)/sum(..count..)), color='black', fill='white') + ylab('percentage') + ggtitle('tempo')
+p5 <- ggplot(aes(x=energy), data=train) +
+  geom_histogram(aes(y=100*(..count..)/sum(..count..)), color='black', fill='white') + ylab('percentage') + ggtitle('energy')
+p6 <- ggplot(aes(x=acousticness), data=train) +
+  geom_histogram(aes(y=100*(..count..)/sum(..count..)), color='black', fill='white') + ylab('percentage') + ggtitle('acousticness')
+p7 <- ggplot(aes(x=speechiness), data=train) +
+  geom_histogram(aes(y=100*(..count..)/sum(..count..)), color='black', fill='white') + ylab('percentage') + ggtitle('speechiness')
+p8 <- ggplot(aes(x=loudness), data=train) +
+  geom_histogram(aes(y=100*(..count..)/sum(..count..)), color='black', fill='white') + ylab('percentage') + ggtitle('loudness')
+grid.arrange(p1, p2, p3, p4, p5, p6, p7, p8, ncol=2)
 ```
+Bad spread of distribution in acousticness, do not include.
+Bad spread of distribution in speechiness, do not include.
 
 Regression analysis: 
 
 ### Bar plot of categorical variables
-p1 <- ggplot(aes(x=title_type), data=train) + geom_bar(aes(y=100*(..count..)/sum(..count..))) + ylab('percentage') +
-  ggtitle('Title Type') + coord_flip()
-p2 <- ggplot(aes(x=genre), data=train) + geom_bar(aes(y=100*(..count..)/sum(..count..))) + ylab('percentage') +
-  ggtitle('Genre') + coord_flip()
-p3 <- ggplot(aes(x=critics_rating), data=train) + geom_bar(aes(y=100*(..count..)/sum(..count..))) + ylab('percentage') +
-  ggtitle('Critics Rating') + coord_flip()
-p4 <- ggplot(aes(x=audience_rating), data=train) + geom_bar(aes(y=100*(..count..)/sum(..count..))) + ylab('percentage') +
-  ggtitle('Audience Rating') + coord_flip()
-grid.arrange(p1, p2, p3, p4, ncol=2)
+
 
 ```{r}
-
 p1 <- ggplot(aes(x=key), data=train) + geom_bar(aes(y=100*(..count..)/sum(..count..))) + ylab('percentage') +
   ggtitle('Key') + coord_flip()
 p2 <- ggplot(aes(x=genre), data=train) + geom_bar(aes(y=100*(..count..)/sum(..count..))) + ylab('percentage') +
@@ -165,63 +129,41 @@ p4 <- ggplot(aes(x=artist), data=train) + geom_bar(aes(y=100*(..count..)/sum(..c
   ggtitle('track artist') + coord_flip()
 grid.arrange(p1, p2, p4, ncol=2)
 ```
-
+Too many artists, do not include.
 
 
 ### Correlation between numerical variables
-vars <- names(train) %in% c('runtime', 'imdb_rating', 'imdb_num_votes', 'critics_score')
-selected_train <- train[vars]
-corr.matrix <- cor(selected_train)
-corrplot(corr.matrix, main="\n\nCorrelation Plot of numerical variables", method="number")
+
 
 ```{r}
-
-vars <- names(train) %in% c('duration_ms', 'danceability', 'valence', 'tempo')
+vars <- names(train) %in% c('duration_ms', 'danceability', 'valence', 'tempo', 'energy', 'loudness', 'instrumentalness')
 selected_train <- train[vars]
 corr.matrix <- cor(selected_train)
 corrplot(corr.matrix, main="\n\nCorrelation Plot of numerical variables", method="number")
-
-
 ```
 
-
+High correlation between loudness and energy (0.65), so only include energy
 
 ### Correlation between categorical variables and audience score
-boxplot(audience_score~critics_rating, data=train, main='Audience score vs. Critics rating', xlab='Critics Rating', ylab='Audience Score')
-by(train$audience_score, train$critics_rating, summary)
-boxplot(audience_score~audience_rating, data=train, main='Audience Score vs. Audience Rating', xlab='Audience rating', ylab='Audience Score')
-by(train$audience_score, train$audience_rating, summary)
-boxplot(audience_score~title_type, data=train, main='Audience score vs. Title type', xlab='Title_type', ylab='Audience Score')
-by(train$audience_score, train$title_type, summary)
-boxplot(audience_score~genre, data=train, main='Audience score vs. Genre', xlab='Genre', ylab='Audience score')
-by(train$audience_score, train$genre, summary)
+
 
 ```{r}
-
-
 boxplot(popularity~key, data=train, main='popularity vs. key', xlab='key', ylab='popularity')
 by(train$popularity, train$key, summary)
 boxplot(popularity~genre, data=train, main='popularity vs. genre', xlab='genre', ylab='popularity')
 by(train$popularity, train$genre, summary)
-
-
 ```
-
+Average populairty varies by genre but not by key.
+Therefore,
+Genre does have correlation with audience score
+Key does not have correlation with audience score
 
 
 ## Part 4: Modeling
 
-We will be using stepwise model forward selection method, we start with an empty model, then add variables one at a time until a parsimonious model is reached. 
-
-From the following full model, we can see that imdb rating has the lowest p value and is the most correlated variable to our response variable. So we choose imdb rating as the first predictor.
-
-full_model <- lm(audience_score~imdb_rating+title_type+genre+runtime+imdb_num_votes+critics_rating+audience_rating+best_pic_win+best_actor_win+best_actress_win+best_dir_win, data=train)
-summary(full_model)
-
 ```{r}
-
 #check order of predictors 
-full_model <- lm(popularity~duration_ms+key+genre+danceability+valence+energy, data=train)
+full_model <- lm(popularity~duration_ms+tempo+genre+danceability+valence+energy+instrumentalness, data=train)
 summary(full_model)
 ```
 
@@ -260,7 +202,7 @@ ggplot(data = full_model, aes(sample = .resid)) +
 ## Part 5: Prediction
 
 ```{r}
-newsong <- test %>% select(duration_ms, key, genre, danceability, valence, energy)
+newsong <- test %>% select(duration_ms, tempo, genre, danceability, valence, energy, instrumentalness)
 predict(full_model, newsong)
 ```
 
