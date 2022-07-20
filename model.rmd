@@ -40,13 +40,6 @@ is song popularity related to energy, key, etc?
 
 ## Part 3: Exploratory data analysis and feature selection
 
-Abstracting the data of the above potential predictors for the model.
-
-movies_new <- movies %>% select(title, title_type, genre, runtime, imdb_rating, imdb_num_votes, critics_rating, critics_score, audience_rating, audience_score, best_pic_win, best_actor_win, best_actress_win, best_dir_win)
-
-```{r}
-
-```
 
 Look at the structure of the data
 
@@ -57,7 +50,6 @@ str(ss)
 Summary statistics
 
 ```{r}
-
 summary(ss)
 ```
 
@@ -66,8 +58,6 @@ drop missing values
 ```{r}
 ss <- na.omit(ss)
 ```
-
-
 
 Split data into training and testing
 
@@ -90,9 +80,6 @@ hist(train$popularity)
 summary(train$popularity)
 ```
 
-
-
-
 ```{r message=FALSE, warning=FALSE}
 p1 <- ggplot(aes(x=duration_ms), data=train) + 
   geom_histogram(aes(y=100*(..count..)/sum(..count..)), color='black', fill='white') + ylab('percentage') + ggtitle('duration_ms')
@@ -112,8 +99,10 @@ p8 <- ggplot(aes(x=loudness), data=train) +
   geom_histogram(aes(y=100*(..count..)/sum(..count..)), color='black', fill='white') + ylab('percentage') + ggtitle('loudness')
 grid.arrange(p1, p2, p3, p4, p5, p6, p7, p8, ncol=2)
 ```
-Bad spread of distribution in acousticness, do not include.
-Bad spread of distribution in speechiness, do not include.
+
+Acousticness has a bad spread of distribution, do not use a prediction variable. 
+Speechiness has a bad spread of distribution, do not use a prediction variable. 
+
 
 Regression analysis: 
 
@@ -129,7 +118,7 @@ p4 <- ggplot(aes(x=artist), data=train) + geom_bar(aes(y=100*(..count..)/sum(..c
   ggtitle('track artist') + coord_flip()
 grid.arrange(p1, p2, p4, ncol=2)
 ```
-Too many artists, do not include.
+Too many artists to be used as prediction categorical variable. 
 
 
 ### Correlation between numerical variables
@@ -142,7 +131,7 @@ corr.matrix <- cor(selected_train)
 corrplot(corr.matrix, main="\n\nCorrelation Plot of numerical variables", method="number")
 ```
 
-High correlation between loudness and energy (0.65), so only include energy
+High correlation between loudness and energy (0.65), so only include energy as prediction variable. 
 
 ### Correlation between categorical variables and audience score
 
@@ -158,6 +147,9 @@ Therefore,
 Genre does have correlation with audience score
 Key does not have correlation with audience score
 
+Genre and popularity have correlation, therefore use genre as prediction variable.
+Key and popularity don't have a correlation, do not use key as prediction variable.
+
 
 ## Part 4: Modeling
 
@@ -165,12 +157,6 @@ Key does not have correlation with audience score
 #check order of predictors 
 full_model <- lm(popularity~duration_ms+tempo+genre+danceability+valence+energy+instrumentalness, data=train)
 summary(full_model)
-```
-
-
-```{r}
-fit1 <- lm(popularity ~ danceability, data=train)
-summary(fit1)
 ```
 
 
