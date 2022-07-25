@@ -14,12 +14,12 @@ https://docs.google.com/presentation/d/1zyIzLsL3ZvJ89za-_BIHgH3LJ3LXNgpvz9WZW1HG
 
 **Reference/Credits:**
 
-Model Development:
+<ins>Model Development:</ins>
 
 https://rpubs.com/susan_li/movie-time
 
 https://susanli2016.github.io/Modeling-Prediction-Movies/
 
-Dataset:
+<ins>Dataset:</ins>
 
 https://www.kaggle.com/datasets/paradisejoy/top-hits-spotify-from-20002019
