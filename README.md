@@ -9,7 +9,7 @@ Value Proposition: “SearcHit! helps artists and music stakeholders put out mor
 
 Presentation Slide Deck:
 
-
+https://docs.google.com/presentation/d/1zyIzLsL3ZvJ89za-_BIHgH3LJ3LXNgpvz9WZW1HGujw/edit?usp=sharing
 
 Reference/Credits:
 
