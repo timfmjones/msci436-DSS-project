@@ -8,8 +8,11 @@ Value Proposition: “SearcHit! helps artists and music stakeholders put out mor
 Reference/Credits:
 
 Model Development:
+
 https://rpubs.com/susan_li/movie-time
+
 https://susanli2016.github.io/Modeling-Prediction-Movies/
 
 Dataset:
+
 https://www.kaggle.com/datasets/paradisejoy/top-hits-spotify-from-20002019
