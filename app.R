@@ -37,7 +37,7 @@ ui <- fluidPage(
       
       selectInput("select", "Genre", 
                   choices = list("Rock" = "rock", "Pop" = "pop",
-                                 "Hip Hop" = "hip hop", "R&B" = "R&B", "Metal" = "metal", "Country" = "country", "Dance/Electronic" = "Dance/Electronic", "Easy Listening" = "easy listening", "Latin" = "latin",  "World/Traditional" = "World/Traditional", "Set()" = "set()"), selected = 1),
+                                 "Hip Hop" = "hip hop", "R&B" = "R&B", "Metal" = "metal", "Country" = "country", "Dance/Electronic" = "Dance/Electronic", "Easy Listening" = "easy listening", "Latin" = "latin",  "Set()" = "set()"), selected = 1),
       width = 25),
     
     # Main panel for displaying outputs ----
