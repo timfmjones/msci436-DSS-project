@@ -35,13 +35,9 @@ ui <- fluidPage(
                    "Duration (in ms)", 
                    value = 250000),
       
-      numericInput("key", 
-                   "Key", 
-                   value = 6),
-      
       selectInput("select", "Genre", 
-                  choices = list("Rock" = "Rock", "Pop" = "Pop",
-                                 "Hip Hop" = "Hip Hop", "Rap" = "Rap", "R&B" = "R&B", "Metal" = "Metal", "Blues" = "Blues", "Country" = "Country", "Dance/Electronic" = "Dance/Electronic", "Easy Listening" = "Easy Listening", "Folk/Acoustic" = "Folk/Acoustic", "Latin" = "Latin",  "World/Traditional" = "World/Traditional", "Set()" = "Set()"), selected = 1),
+                  choices = list("Rock" = "rock", "Pop" = "pop",
+                                 "Hip Hop" = "hip hop", "R&B" = "R&B", "Metal" = "metal", "Country" = "country", "Dance/Electronic" = "Dance/Electronic", "Easy Listening" = "easy listening", "Latin" = "latin",  "World/Traditional" = "World/Traditional", "Set()" = "set()"), selected = 1),
       width = 25),
     
     # Main panel for displaying outputs ----
@@ -52,8 +48,9 @@ ui <- fluidPage(
       renderText({input$val}),
       renderText({input$temp}),
       renderText({input$danc}),
+      renderText({input$energy}),
+      renderText({input$inst}),
       renderText({input$dur}),
-      renderText({input$key}),
       renderText({input$select}),
       # Output: Histogram ----
       #plotOutput(outputId = "distPlot")
@@ -69,9 +66,9 @@ server <- function(input, output) {
     
     ss <- readr::read_csv('spotify_songs.csv')
     ss <- na.omit(ss)
-    full_model <- lm(popularity~duration_ms+tempo+danceability+valence+energy+instrumentalness, data=ss)
+    full_model <- lm(popularity~duration_ms+tempo+danceability+valence+energy+instrumentalness+genre, data=ss)
     
-    newsong <- data.frame(duration_ms=c({input$dur}),tempo=c({input$temp}),danceability=c({input$danc}),valence=c({input$val}),energy=c({input$energy}),instrumentalness=c({input$inst}))
+    newsong <- data.frame(duration_ms=c({input$dur}),tempo=c({input$temp}),danceability=c({input$danc}),valence=c({input$val}),energy=c({input$energy}),instrumentalness=c({input$inst}), genre=c({input$select}))
     predict(full_model, newsong)
     predict(full_model, newsong, interval = "prediction", level = 0.05)
   })
